@@ -30,3 +30,26 @@ app.get("/api/hello", function (req, res) {
 var listener = app.listen(process.env.PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port);
 });
+
+// microservice 
+app.get("/api/:date", function(req, res) {
+  let ts = Number(req.params.date);
+  // check if the parameter is a timestamp
+  if (isNaN(ts)){
+    ts = req.params.date;
+  }
+  
+  let date = new Date(ts);
+  // check if it's a valid date
+  if (isNaN(date.valueOf())) {
+    res.json({ error: date.toString() });
+  } else {
+    res.json({ unix: Date.parse(date), utc: date.toUTCString() });
+  }
+});
+
+
+app.get("/api", function(req, res) {
+  let date = new Date();
+  res.json({ unix: Date.parse(date), utc: date.toUTCString() });
+});
